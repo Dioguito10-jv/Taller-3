@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Finalizar Compra - BiblioAcademia</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <script defer>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('form-compra');
+      const totalSpan = document.getElementById('total');
+      const submitButton = form.querySelector('button[type="submit"]');
+
+      // Mostrar total acumulado
+      const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+      let total = 0;
+      carrito.forEach(item => {
+        const precio = parseFloat(item.precio?.replace(/[^\d.]/g, '') || 0);
+        total += precio;
+      });
+
+      totalSpan.textContent = total.toFixed(2);
+
+      // Validar compra
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const nombre = form.nombre.value.trim();
+        const email = form.email.value.trim();
+        const direccion = form.direccion.value.trim();
+
+        if (!nombre || !email || !direccion) {
+          alert('Por favor, completa todos los campos.');
+          return;
+        }
+
+        // Desactivar botón para evitar doble click
+        submitButton.disabled = true;
+        submitButton.textContent = "Procesando...";
+
+        // Preparar el pedido
+        const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+        const total = carrito.reduce((sum, item) => {
+          const precio = parseFloat(item.precio?.replace(/[^\d.]/g, '') || 0);
+          return sum + precio;
+        }, 0);
+
+        const pedido = {
+          nombre,
+          email,
+          direccion,
+          total,
+          fecha: new Date().toISOString(), // buena práctica
+          libros: carrito.length > 0 ? JSON.stringify(carrito) : "[]" // evitar null
+        };
+
+        try {
+          const response = await fetch('https://localhost:7114/api/pedidos', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(pedido)
+          });
+
+          if (response.ok) {
+            alert('¡Gracias por tu compra! Pedido enviado correctamente.');
+            localStorage.removeItem('carrito');
+            window.location.href = 'index.html';
+          } else {
+            alert('Error al enviar el pedido.');
+            submitButton.disabled = false;
+            submitButton.textContent = "Confirmar pedido";
+          }
+        } catch (error) {
+          console.error(error);
+          alert('Error de conexión con el servidor.');
+          submitButton.disabled = false;
+          submitButton.textContent = "Confirmar pedido";
+        }
+      });
+    });
+  </script>
+</head>
+<body>
+  <header class="main-header">
+    <div class="logo">BiblioAcademia</div>
+    <nav class="nav-menu">
+      <a href="index.html">Inicio</a>
+      <a href="carrito.html">Carrito</a>
+    </nav>
+  </header>
+
+  <section>
+    <h2>Finalizar Compra</h2>
+    <p>Total a pagar: <strong>S/<span id="total">0.00</span></strong></p>
+
+    <form id="form-compra">
+      <div class="form-group">
+        <label for="nombre">Nombre completo:</label>
+        <input type="text" id="nombre" name="nombre" placeholder="Tu nombre completo" required>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Correo electrónico:</label>
+        <input type="email" id="email" name="email" placeholder="Correo electrónico" required>
+      </div>
+
+      <div class="form-group">
+        <label for="direccion">Dirección de entrega:</label>
+        <textarea id="direccion" name="direccion" placeholder="Dirección de entrega" required></textarea>
+      </div>
+
+      <button type="submit" class="estandar-button">Confirmar pedido</button>
+    </form>
+  </section>
+
+  <footer class="main-footer">
+    <p>&copy; 2025 BiblioAcademia</p>
+    <p><a href="#">Términos y condiciones</a> | <a href="#">Política de privacidad</a></p>
+    <div class="redes">
+      <a href="#" class="redes"><span class="bi bi-twitter"></span></a>
+      <a href="#" class="redes"><span class="bi bi-instagram"></span></a>
+      <a href="#" class="redes"><span class="bi bi-facebook"></span></a>
+    </div>
+  </footer>
+</body>
+</html>

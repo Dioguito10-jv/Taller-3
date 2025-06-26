@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrito - BiblioAcademia</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <script defer>
+  document.addEventListener('DOMContentLoaded', () => {
+    const contenedor = document.getElementById('carrito-libros');
+    const totalSpan = document.getElementById('total');
+    const vaciarBtn = document.getElementById('vaciar-carrito');
+    const comprarBtn = document.getElementById('comprar');
+
+    function cargarCarrito() {
+      const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+      contenedor.innerHTML = '';
+      let total = 0;
+
+      if (carrito.length === 0) {
+        contenedor.innerHTML = '<p>Tu carrito está vacío.</p>';
+        totalSpan.textContent = '0.00';
+        return;
+      }
+
+      carrito.forEach((libro, index) => {
+        const div = document.createElement('div');
+        div.className = 'libro';
+
+        // Si el precio viene como número (lo correcto)
+        const precioUnitario = parseFloat(libro.precio) || 0;
+        const cantidad = parseInt(libro.cantidad) || 1;
+        const subtotal = precioUnitario * cantidad;
+
+        total += subtotal;
+
+        div.innerHTML = `
+          <div class="carrito-item">
+            <img src="${libro.imgSrc}" alt="${libro.titulo}" class="carrito-item-img">
+            <div class="carrito-item-info">
+              <h3>${libro.titulo}</h3>
+              <p>Precio unitario: S/ ${precioUnitario.toFixed(2)}</p>
+              <p>Cantidad: ${cantidad}</p>
+              <p>Subtotal: S/ ${subtotal.toFixed(2)}</p>
+              <button data-index="${index}" class="eliminar">Eliminar</button>
+            </div>
+          </div>
+        `;
+
+        contenedor.appendChild(div);
+      });
+
+      totalSpan.textContent = total.toFixed(2);
+
+      document.querySelectorAll('.eliminar').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const idx = e.target.dataset.index;
+          carrito.splice(idx, 1);
+          localStorage.setItem('carrito', JSON.stringify(carrito));
+          cargarCarrito();
+        });
+      });
+    }
+
+    vaciarBtn.addEventListener('click', () => {
+      localStorage.removeItem('carrito');
+      cargarCarrito();
+    });
+
+    comprarBtn.addEventListener('click', () => {
+      const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+
+      if (carrito.length === 0) {
+        alert('Tu carrito está vacío. Agrega productos antes de comprar.');
+        return;
+      }
+      const total = carrito.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
+      localStorage.setItem('totalCompra', total.toFixed(2));
+      window.location.href = 'finalizar-compra.html';
+    });
+
+    cargarCarrito();
+  });
+</script>
+</head>
+<body>
+
+  <header class="main-header">
+    <div class="logo">
+      BiblioAcademia
+    </div>
+    <nav class="nav-menu">
+      <a href="index.html">Inicio</a>
+      <a href="#">Catálogo</a>
+      <a href="#">Contacto</a>
+    </nav>
+  </header>
+
+  <section>
+    <h2>Mi carrito</h2>
+    <div id="carrito-libros" class="libros-grid"></div>
+    <br>
+    <p><strong>Total: S/<span id="total">0.00</span></strong></p>
+    <br>
+    <button id="vaciar-carrito" class="estandar-button">Vaciar carrito</button>
+    <button id="comprar" class="estandar-button">Comprar</button>
+  </section>
+
+  <footer class="main-footer">
+    <p>&copy; 2025 BiblioAcademia</p>
+    <p><a href="#">Términos y condiciones</a> | <a href="#">Política de privacidad</a></p>
+    <div class="redes">
+        <a href="#" class="redes"><span class="bi bi-twitter"></span></a>
+        <a href="#" class="redes"><span class="bi bi-instagram"></span></a>
+        <a href="#" class="redes"><span class="bi bi-facebook"></span></a>
+    </div>
+  </footer>
+
+</body>
+</html>

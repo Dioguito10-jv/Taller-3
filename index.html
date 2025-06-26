@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BiblioAcademia - Tu librería académica online</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="main.js" defer></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+</head>
+<body>
+
+  <header class="main-header">
+    <div class="logo">BiblioAcademia</div>
+    <input type="search" placeholder="Buscar libros..." class="search-bar" />
+    <nav class="nav-menu">
+      <a href="#hero">Inicio</a>
+      <div class="dropdown">
+        <a href="#" class="dropdown-toggle">Géneros</a>
+        <ul class="dropdown-menu">
+          <li><a href="fantasia.html">Fantasía</a></li>
+          <li><a href="romance.html">Romance</a></li>
+          <li><a href="misterio.html">Misterio</a></li>
+        </ul>
+      </div>
+      <a href="#ofertas">Ofertas</a>
+      <a href="#opiniones">Opiniones</a>
+      <a href="#contacto">Contacto</a>
+      <a href="carrito.html" class="carrito-link">🛒<span id="contador-carrito" class="contador-carrito">0</span></a>
+    </nav>
+  </header>
+
+  <section id="hero" class="hero">
+    <h1>Descubre tu próxima lectura</h1>
+    <p>Explora miles de títulos desde la comodidad de tu hogar</p>
+    <a href="#catalogo" class="estandar-button">Explorar catálogo</a>
+  </section>
+
+  <section id="catalogo" class="catalogo">
+    <h2>Catálogo de libros</h2>
+    <fieldset class="genero-fieldset categoria-fantasia">
+      <legend>Fantasía</legend>
+      <div class="libros-grid"></div>
+    </fieldset>
+
+    <fieldset class="genero-fieldset categoria-romance">
+      <legend>Romance</legend>
+      <div class="libros-grid"></div>
+    </fieldset>
+
+    <fieldset class="genero-fieldset categoria-misterio">
+      <legend>Misterio</legend>
+      <div class="libros-grid"></div>
+    </fieldset>
+
+  </section>
+
+  <section id="opiniones" class="opiniones">
+    <h2>Lo que dicen nuestros lectores</h2>
+    <blockquote>
+      <p>"Entrega rápida y libros en perfecto estado."</p>
+      <cite>– Ana Gómez</cite>
+    </blockquote>
+    <blockquote>
+      <p>"Muy buen catálogo y excelente atención."</p>
+      <cite>– Carlos Ruiz</cite>
+    </blockquote>
+  </section>
+
+  <section class="suscripcion">
+    <h2>Suscríbete a nuestro boletín</h2>
+    <p>Recibe ofertas, recomendaciones y novedades en tu correo.</p>
+    <form>
+      <input type="email" placeholder="Tu correo electrónico" required />
+      <button type="submit">Suscribirme</button>
+    </form>
+  </section>
+
+  <section id="contacto" class="contacto">
+    <h2>Contáctanos</h2>
+    <p>¿Tienes alguna pregunta, sugerencia o comentario? ¡Estamos aquí para ayudarte!</p>
+    <p>Email: contacto@biblioacademia.com</p>
+    <form>
+      <textarea placeholder="Tu mensaje" required></textarea>
+      <button type="submit">Enviar</button>
+    </form>
+  </section>
+
+  <footer class="main-footer">
+    <p>&copy; 2025 BiblioAcademia</p>
+    <p><a href="#">Términos y condiciones</a> | <a href="#">Política de privacidad</a></p>
+    <div class="redes">
+      <a href="#" class="redes"><span class="bi bi-twitter"></span></a>
+      <a href="#" class="redes"><span class="bi bi-instagram"></span></a>
+      <a href="#" class="redes"><span class="bi bi-facebook"></span></a>
+    </div>
+  </footer>
+
+</body>
+</html>
